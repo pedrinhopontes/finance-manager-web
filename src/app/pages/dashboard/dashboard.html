@@ -1,0 +1,75 @@
+<div class="dashboard">
+  <header class="header">
+    <h1>Finance Manager</h1>
+    <button class="btn-logout" (click)="logout()">Sair</button>
+  </header>
+
+  <div class="cards">
+    <div class="card income">
+      <span>Receitas</span>
+      <strong>R$ {{ totalIncome | number:'1.2-2' }}</strong>
+    </div>
+    <div class="card expense">
+      <span>Despesas</span>
+      <strong>R$ {{ totalExpense | number:'1.2-2' }}</strong>
+    </div>
+    <div class="card balance" [class.negative]="balance < 0">
+      <span>Saldo</span>
+      <strong>R$ {{ balance | number:'1.2-2' }}</strong>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn-add" (click)="showForm = !showForm">
+      {{ showForm ? 'Cancelar' : '+ Nova Transação' }}
+    </button>
+  </div>
+
+  <div class="form-container" *ngIf="showForm">
+    <form (ngSubmit)="onSubmit()">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Descrição</label>
+          <input type="text" [(ngModel)]="newTransaction.description" name="description" required placeholder="Ex: Salário" />
+        </div>
+        <div class="form-group">
+          <label>Valor</label>
+          <input type="number" [(ngModel)]="newTransaction.amount" name="amount" required min="0.01" step="0.01" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Tipo</label>
+          <select [(ngModel)]="newTransaction.type" name="type">
+            <option [value]="1">Receita</option>
+            <option [value]="2">Despesa</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Categoria</label>
+          <input type="text" [(ngModel)]="newTransaction.category" name="category" required placeholder="Ex: Alimentação" />
+        </div>
+      </div>
+      <button type="submit">Salvar</button>
+    </form>
+  </div>
+
+  <div class="transactions">
+    <h2>Transações</h2>
+    <div *ngIf="loading">Carregando...</div>
+    <div *ngIf="!loading && transactions.length === 0" class="empty">
+      Nenhuma transação encontrada.
+    </div>
+    <div class="transaction-item" *ngFor="let t of transactions" [class.income]="t.type === 1" [class.expense]="t.type === 2">
+      <div class="transaction-info">
+        <span class="description">{{ t.description }}</span>
+        <span class="category">{{ t.category }}</span>
+        <span class="date">{{ t.date | date:'dd/MM/yyyy' }}</span>
+      </div>
+      <div class="transaction-right">
+        <span class="amount">{{ t.type === 1 ? '+' : '-' }} R$ {{ t.amount | number:'1.2-2' }}</span>
+        <button class="btn-delete" (click)="delete(t.id)">✕</button>
+      </div>
+    </div>
+  </div>
+</div>

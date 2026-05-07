@@ -1,31 +1,41 @@
-<div class="dashboard">
-  <header class="header">
-    <h1>Finance Manager</h1>
-    <button class="btn-logout" (click)="logout()">Sair</button>
-  </header>
-
-  <div class="cards">
-    <div class="card income">
-      <span>Receitas</span>
-      <strong>R$ {{ totalIncome | number:'1.2-2' }}</strong>
-    </div>
-    <div class="card expense">
-      <span>Despesas</span>
-      <strong>R$ {{ totalExpense | number:'1.2-2' }}</strong>
-    </div>
-    <div class="card balance" [class.negative]="balance < 0">
-      <span>Saldo</span>
-      <strong>R$ {{ balance | number:'1.2-2' }}</strong>
-    </div>
+<div class="page-header">
+  <div>
+    <h2>Dashboard</h2>
+    <p>Visão geral das suas finanças</p>
   </div>
+  <button class="btn-add" (click)="showForm = !showForm">
+    <i class="ti ti-plus"></i>
+    {{ showForm ? 'Cancelar' : 'Nova transação' }}
+  </button>
+</div>
 
-  <div class="actions">
-    <button class="btn-add" (click)="showForm = !showForm">
-      {{ showForm ? 'Cancelar' : '+ Nova Transação' }}
-    </button>
+<div class="cards-grid">
+  <div class="metric-card">
+    <div class="metric-icon green">
+      <i class="ti ti-trending-up"></i>
+    </div>
+    <div class="metric-label">Receitas</div>
+    <div class="metric-value">R$ {{ totalIncome | number:'1.2-2' }}</div>
   </div>
+  <div class="metric-card">
+    <div class="metric-icon red">
+      <i class="ti ti-trending-down"></i>
+    </div>
+    <div class="metric-label">Despesas</div>
+    <div class="metric-value">R$ {{ totalExpense | number:'1.2-2' }}</div>
+  </div>
+  <div class="metric-card" [class.negative]="balance < 0">
+    <div class="metric-icon purple">
+      <i class="ti ti-wallet"></i>
+    </div>
+    <div class="metric-label">Saldo</div>
+    <div class="metric-value">R$ {{ balance | number:'1.2-2' }}</div>
+  </div>
+</div>
 
-  <div class="form-container" *ngIf="showForm">
+@if (showForm) {
+  <div class="form-card">
+    <h3>Nova transação</h3>
     <form (ngSubmit)="onSubmit()">
       <div class="form-row">
         <div class="form-group">
@@ -34,7 +44,7 @@
         </div>
         <div class="form-group">
           <label>Valor</label>
-          <input type="number" [(ngModel)]="newTransaction.amount" name="amount" required min="0.01" step="0.01" />
+          <input type="number" [(ngModel)]="newTransaction.amount" name="amount" required min="0.01" step="0.01" placeholder="0,00" />
         </div>
       </div>
       <div class="form-row">
@@ -50,26 +60,58 @@
           <input type="text" [(ngModel)]="newTransaction.category" name="category" required placeholder="Ex: Alimentação" />
         </div>
       </div>
-      <button type="submit">Salvar</button>
+      <div class="form-actions">
+        <button type="button" class="btn-cancel" (click)="showForm = false">Cancelar</button>
+        <button type="submit" class="btn-save">
+          <i class="ti ti-check"></i> Salvar
+        </button>
+      </div>
     </form>
   </div>
+}
 
-  <div class="transactions">
-    <h2>Transações</h2>
-    <div *ngIf="loading">Carregando...</div>
-    <div *ngIf="!loading && transactions.length === 0" class="empty">
-      Nenhuma transação encontrada.
-    </div>
-    <div class="transaction-item" *ngFor="let t of transactions" [class.income]="t.type === 1" [class.expense]="t.type === 2">
-      <div class="transaction-info">
-        <span class="description">{{ t.description }}</span>
-        <span class="category">{{ t.category }}</span>
-        <span class="date">{{ t.date | date:'dd/MM/yyyy' }}</span>
-      </div>
-      <div class="transaction-right">
-        <span class="amount">{{ t.type === 1 ? '+' : '-' }} R$ {{ t.amount | number:'1.2-2' }}</span>
-        <button class="btn-delete" (click)="delete(t.id)">✕</button>
-      </div>
-    </div>
+<div class="transactions-card">
+  <div class="transactions-header">
+    <h3>Transações recentes</h3>
+    <span class="tx-count">{{ transactions.length }} registros</span>
   </div>
+
+  @if (loading) {
+    <div class="empty-state">
+      <i class="ti ti-loader"></i>
+      <p>Carregando...</p>
+    </div>
+  }
+
+  @if (!loading && transactions.length === 0) {
+    <div class="empty-state">
+      <i class="ti ti-inbox"></i>
+      <p>Nenhuma transação encontrada</p>
+      <span>Clique em "Nova transação" para começar</span>
+    </div>
+  }
+
+  @for (t of transactions; track t.id) {
+    <div class="tx-item">
+      <div class="tx-icon" [class.income]="t.type === 1" [class.expense]="t.type === 2">
+        <i class="ti" [class.ti-arrow-up]="t.type === 1" [class.ti-arrow-down]="t.type === 2"></i>
+      </div>
+      <div class="tx-info">
+        <span class="tx-description">{{ t.description }}</span>
+        <div class="tx-meta">
+          <span class="tx-category">{{ t.category }}</span>
+          <span class="tx-dot">·</span>
+          <span class="tx-date">{{ t.date | date:'dd/MM/yyyy' }}</span>
+        </div>
+      </div>
+      <div class="tx-right">
+        <span class="tx-amount" [class.pos]="t.type === 1" [class.neg]="t.type === 2">
+          {{ t.type === 1 ? '+' : '-' }} R$ {{ t.amount | number:'1.2-2' }}
+        </span>
+        <button class="btn-delete" (click)="delete(t.id)">
+          <i class="ti ti-trash"></i>
+        </button>
+      </div>
+    </div>
+  }
 </div>

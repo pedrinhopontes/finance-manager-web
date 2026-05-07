@@ -1,0 +1,72 @@
+<div class="page-header">
+  <div>
+    <h2>Relatórios</h2>
+    <p>Análise detalhada das suas finanças</p>
+  </div>
+</div>
+
+<div class="summary-cards">
+  <div class="summary-card income">
+    <i class="ti ti-arrow-up-circle"></i>
+    <div>
+      <span>Total de receitas</span>
+      <strong>R$ {{ totalIncome | number:'1.2-2' }}</strong>
+    </div>
+  </div>
+  <div class="summary-card expense">
+    <i class="ti ti-arrow-down-circle"></i>
+    <div>
+      <span>Total de despesas</span>
+      <strong>R$ {{ totalExpense | number:'1.2-2' }}</strong>
+    </div>
+  </div>
+  <div class="summary-card balance" [class.negative]="balance < 0">
+    <i class="ti ti-scale"></i>
+    <div>
+      <span>Saldo geral</span>
+      <strong>R$ {{ balance | number:'1.2-2' }}</strong>
+    </div>
+  </div>
+</div>
+
+<div class="charts-grid">
+  <div class="chart-card">
+    <h3>Despesas por categoria</h3>
+    @if (transactions.length === 0) {
+      <div class="empty-chart">
+        <i class="ti ti-chart-pie"></i>
+        <p>Sem dados ainda</p>
+      </div>
+    } @else {
+      <canvas #categoryChart></canvas>
+    }
+  </div>
+
+  <div class="chart-card">
+    <h3>Receitas x despesas por mês</h3>
+    @if (transactions.length === 0) {
+      <div class="empty-chart">
+        <i class="ti ti-chart-bar"></i>
+        <p>Sem dados ainda</p>
+      </div>
+    } @else {
+      <canvas #monthlyChart></canvas>
+    }
+  </div>
+</div>
+
+@if (getCategoryExpenses().length > 0) {
+  <div class="category-breakdown">
+    <h3>Detalhamento por categoria</h3>
+    @for (item of getCategoryExpenses(); track item.category) {
+      <div class="category-row">
+        <span class="category-name">{{ item.category }}</span>
+        <div class="category-bar-wrap">
+          <div class="category-bar" [style.width.%]="item.percent"></div>
+        </div>
+        <span class="category-amount">R$ {{ item.amount | number:'1.2-2' }}</span>
+        <span class="category-percent">{{ item.percent | number:'1.0-0' }}%</span>
+      </div>
+    }
+  </div>
+}

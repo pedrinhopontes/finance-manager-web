@@ -1,0 +1,140 @@
+.page-header {
+  margin-bottom: 24px;
+
+  h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 2px;
+  }
+
+  p { font-size: 13px; color: #64748b; }
+}
+
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.summary-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  i { font-size: 28px; }
+
+  div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    span { font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: 0.04em; }
+    strong { font-size: 20px; font-weight: 600; color: #1e293b; }
+  }
+
+  &.income i { color: #10b981; }
+  &.expense i { color: #ef4444; }
+  &.balance i { color: #6366f1; }
+  &.negative strong { color: #ef4444; }
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.chart-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px;
+
+  h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 16px;
+  }
+}
+
+.empty-chart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px;
+  color: #94a3b8;
+
+  i { font-size: 36px; margin-bottom: 8px; }
+  p { font-size: 13px; }
+}
+
+.category-breakdown {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px;
+
+  h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 16px;
+  }
+}
+
+.category-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+
+  &:last-child { margin-bottom: 0; }
+}
+
+.category-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: #1e293b;
+  width: 120px;
+  flex-shrink: 0;
+}
+
+.category-bar-wrap {
+  flex: 1;
+  height: 8px;
+  background: #f1f5f9;
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.category-bar {
+  height: 100%;
+  background: #6366f1;
+  border-radius: 99px;
+  transition: width .3s ease;
+}
+
+.category-amount {
+  font-size: 13px;
+  font-weight: 500;
+  color: #1e293b;
+  width: 110px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.category-percent {
+  font-size: 12px;
+  color: #94a3b8;
+  width: 40px;
+  text-align: right;
+  flex-shrink: 0;
+}
